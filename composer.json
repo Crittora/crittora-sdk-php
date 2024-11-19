@@ -1,15 +1,16 @@
 {
-    "name": "wutif/crittora-sdk-php",
-    "autoload": {
-        "psr-4": {
-            "Wutif\\CrittoraSdkPhp\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Gerardo I. Ornelas",
-            "email": "gerardo@ornelastechnologies.com"
-        }
-    ],
-    "require": {}
+  "name": "wutif/crittora-sdk-php",
+  "description": "Crittora SDK for PHP",
+  "type": "library",
+  "require": {
+    "php": ">=7.4",
+    "aws/aws-sdk-php": "^3.0",
+    "guzzlehttp/guzzle": "^7.0",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Crittora\\": "src/Crittora/"
+    }
+  }
 }
