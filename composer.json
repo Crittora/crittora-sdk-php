@@ -1,0 +1,15 @@
+{
+    "name": "wutif/crittora-sdk-php",
+    "autoload": {
+        "psr-4": {
+            "Wutif\\CrittoraSdkPhp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gerardo I. Ornelas",
+            "email": "gerardo@ornelastechnologies.com"
+        }
+    ],
+    "require": {}
+}
