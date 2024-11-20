@@ -44,6 +44,24 @@ class EncryptionServiceTest extends TestCase
         $this->encryptionService->encrypt($idToken, $data);
     }
 
+    public function testEncryptServerError()
+    {
+        $this->expectException(CrittoraException::class);
+        $this->expectExceptionMessage('Encryption failed: HTTP error! status: 500, body: {"error": "string indices must be integers, not \'str\'}');
+
+        $idToken = 'test_id_token';
+        $data = 'test_data';
+
+        $this->httpClientMock->method('post')
+            ->willThrowException(new CrittoraException(
+                'HTTP error! status: 500, body: {"error": "string indices must be integers, not \'str\'}',
+                'HTTP_ERROR',
+                500
+            ));
+
+        $this->encryptionService->encrypt($idToken, $data);
+    }
+
     public function testDecryptSuccess()
     {
         $idToken = 'test_id_token';

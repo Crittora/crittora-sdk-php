@@ -34,9 +34,9 @@ class EncryptionService
 
     private function getHeaders(string $idToken): array
     {
-        $apiKey = getenv('API_KEY') ?: '';
-        $accessKey = getenv('ACCESS_KEY') ?: '';
-        $secretKey = getenv('SECRET_KEY') ?: '';
+        $apiKey = getenv('API_KEY') ?: '?i~qvva5.0L_bxcN?o.*1BfaYFlFS100kHc?WixHHaGX0RG~iLY_*IYSm4fW1kZ-';
+        $accessKey = getenv('ACCESS_KEY') ?: 'RMF237?eMHjSb4i1xF6am8o732P4U0gA';
+        $secretKey = getenv('SECRET_KEY') ?: 'jqUKI6PKnd86wACm8Pyez2Pp8kq7P4tV197b8UFJ~N-0rZZHK4Vdfe..3kQbDjt*';
 
         error_log("API Key: " . $apiKey);
         error_log("Access Key: " . $accessKey);
@@ -126,11 +126,48 @@ class EncryptionService
 
         try {
             $response = $this->httpClient->post($url, $headers, $payload);
-            return $response;
+            if (isset($response['body'])) {
+                return json_decode($response['body'], true);
+            } else {
+                throw new CrittoraException(
+                    'Decrypt-verify failed: Unexpected response format',
+                    'DECRYPT_VERIFY_ERROR'
+                );
+            }
         } catch (\Exception $e) {
             throw new CrittoraException(
                 'Decrypt-verify failed: ' . $e->getMessage(),
                 'DECRYPT_VERIFY_ERROR',
+                is_int($e->getCode()) ? $e->getCode() : null
+            );
+        }
+    }
+
+    public function signEncrypt(string $idToken, string $data, array $permissions = []): string
+    {
+        $url = $this->baseUrl . '/sign-encrypt';
+        $headers = $this->getHeaders($idToken);
+        $payload = [
+            'data' => $data,
+            'requested_actions' => ['e', 's']
+        ];
+
+        if (!empty($permissions)) {
+            $payload['permissions'] = $permissions;
+        }
+
+        try {
+            $response = $this->httpClient->post($url, $headers, $payload);
+            if (isset($response['body'])) {
+                $body = json_decode($response['body'], true);
+                return $body['encrypted_data'] ?? 'An error has occurred, please check your credentials and try again.';
+            } else {
+                return 'An error has occurred, please check your credentials and try again.';
+            }
+        } catch (\Exception $e) {
+            throw new CrittoraException(
+                'Sign-encrypt failed: ' . $e->getMessage(),
+                'SIGN_ENCRYPT_ERROR',
                 is_int($e->getCode()) ? $e->getCode() : null
             );
         }
