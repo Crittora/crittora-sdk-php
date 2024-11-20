@@ -1,6 +1,6 @@
 <?php
 
-namespace Crittora\Encryption;
+namespace Crittora\Services;
 
 use Crittora\Exception\CrittoraException;
 use Crittora\Config\ConfigManager;
@@ -12,11 +12,11 @@ class EncryptionService
     private $baseUrl;
     private $httpClient;
 
-    private function __construct()
+    private function __construct($httpClient = null)
     {
         $config = ConfigManager::getInstance()->getConfig();
         $this->baseUrl = $config['baseUrl'];
-        $this->httpClient = HttpClient::getInstance();
+        $this->httpClient = $httpClient ?: HttpClient::getInstance();
     }
 
     public static function getInstance(): self
@@ -27,13 +27,26 @@ class EncryptionService
         return self::$instance;
     }
 
+    public static function getTestInstance($httpClient): self
+    {
+        return new self($httpClient);
+    }
+
     private function getHeaders(string $idToken): array
     {
+        $apiKey = getenv('API_KEY') ?: '';
+        $accessKey = getenv('ACCESS_KEY') ?: '';
+        $secretKey = getenv('SECRET_KEY') ?: '';
+
+        error_log("API Key: " . $apiKey);
+        error_log("Access Key: " . $accessKey);
+        error_log("Secret Key: " . $secretKey);
+
         return [
             'Authorization' => "Bearer {$idToken}",
-            'api_key' => getenv('API_KEY') ?: '',
-            'access_key' => getenv('ACCESS_KEY') ?: '',
-            'secret_key' => getenv('SECRET_KEY') ?: '',
+            'api_key' => $apiKey,
+            'access_key' => $accessKey,
+            'secret_key' => $secretKey,
             'Content-Type' => 'application/json'
         ];
     }
@@ -54,7 +67,10 @@ class EncryptionService
         try {
             $response = $this->httpClient->post($url, $headers, $payload);
             if (!isset($response['encrypted_data'])) {
-                throw new CrittoraException('Encryption failed: Unexpected response format');
+                throw new CrittoraException(
+                    'Encryption failed: Unexpected response format',
+                    'ENCRYPTION_ERROR'
+                );
             }
             return $response['encrypted_data'];
         } catch (\Exception $e) {
@@ -81,7 +97,10 @@ class EncryptionService
         try {
             $response = $this->httpClient->post($url, $headers, $payload);
             if (!isset($response['decrypted_data'])) {
-                throw new CrittoraException('Decryption failed: Unexpected response format');
+                throw new CrittoraException(
+                    'Decryption failed: Unexpected response format',
+                    'DECRYPTION_ERROR'
+                );
             }
             return $response['decrypted_data'];
         } catch (\Exception $e) {

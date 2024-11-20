@@ -3,7 +3,7 @@
 namespace Crittora;
 
 use Crittora\Auth\AuthenticationService;
-use Crittora\Encryption\EncryptionService;
+use Crittora\Services\EncryptionService;
 use Crittora\Exception\CrittoraException;
 
 class CrittoraSDK

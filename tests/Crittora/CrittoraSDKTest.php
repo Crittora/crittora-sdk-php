@@ -1,9 +1,11 @@
 <?php
 
+namespace Crittora\Tests;
+
 use PHPUnit\Framework\TestCase;
 use Crittora\CrittoraSDK;
 use Crittora\Auth\AuthenticationService;
-use Crittora\Encryption\EncryptionService;
+use Crittora\Services\EncryptionService;
 
 class CrittoraSDKTest extends TestCase
 {
@@ -13,27 +15,26 @@ class CrittoraSDKTest extends TestCase
 
     protected function setUp(): void
     {
-        // Create mocks for AuthenticationService and EncryptionService
+        // Mock AuthenticationService and EncryptionService
         $this->mockAuthService = $this->createMock(AuthenticationService::class);
         $this->mockEncryptionService = $this->createMock(EncryptionService::class);
 
-        // Mock the singleton pattern's getInstance method
-        $authenticationServiceReflection = new ReflectionClass(AuthenticationService::class);
-        $encryptionServiceReflection = new ReflectionClass(EncryptionService::class);
-
-        $authInstanceProperty = $authenticationServiceReflection->getProperty('instance');
+        // Override singleton's instance to use mocks
+        $authServiceReflection = new \ReflectionClass(AuthenticationService::class);
+        $authInstanceProperty = $authServiceReflection->getProperty('instance');
         $authInstanceProperty->setAccessible(true);
-        $authInstanceProperty->setValue(null, $this->mockAuthService); // Pass null for static properties
+        $authInstanceProperty->setValue($this->mockAuthService);
 
+        $encryptionServiceReflection = new \ReflectionClass(EncryptionService::class);
         $encryptionInstanceProperty = $encryptionServiceReflection->getProperty('instance');
         $encryptionInstanceProperty->setAccessible(true);
-        $encryptionInstanceProperty->setValue(null, $this->mockEncryptionService); // Pass null for static properties
+        $encryptionInstanceProperty->setValue($this->mockEncryptionService);
 
-        // Instantiate the SDK
+        // Initialize the SDK
         $this->sdk = new CrittoraSDK();
     }
 
-    public function testAuthenticateSuccess()
+    public function testAuthenticateSuccess(): void
     {
         $mockUsername = 'testUser';
         $mockPassword = 'testPassword';
@@ -53,12 +54,12 @@ class CrittoraSDKTest extends TestCase
         $this->assertEquals($mockResult, $result);
     }
 
-    public function testEncryptSuccess()
+    public function testEncryptSuccess(): void
     {
         $mockIdToken = 'mockIdToken';
         $mockData = 'testData';
         $mockPermissions = ['read', 'write'];
-        $mockEncryptedData = 'encryptedTestData';
+        $mockEncryptedData = 'mockEncryptedData';
 
         $this->mockEncryptionService->expects($this->once())
             ->method('encrypt')
@@ -70,12 +71,12 @@ class CrittoraSDKTest extends TestCase
         $this->assertEquals($mockEncryptedData, $result);
     }
 
-    public function testDecryptSuccess()
+    public function testDecryptSuccess(): void
     {
         $mockIdToken = 'mockIdToken';
-        $mockEncryptedData = 'encryptedTestData';
+        $mockEncryptedData = 'mockEncryptedData';
         $mockPermissions = ['read'];
-        $mockDecryptedData = 'decryptedTestData';
+        $mockDecryptedData = 'mockDecryptedData';
 
         $this->mockEncryptionService->expects($this->once())
             ->method('decrypt')
@@ -87,13 +88,13 @@ class CrittoraSDKTest extends TestCase
         $this->assertEquals($mockDecryptedData, $result);
     }
 
-    public function testDecryptVerifySuccess()
+    public function testDecryptVerifySuccess(): void
     {
         $mockIdToken = 'mockIdToken';
-        $mockEncryptedData = 'encryptedTestData';
+        $mockEncryptedData = 'mockEncryptedData';
         $mockPermissions = ['read'];
         $mockDecryptionResult = [
-            'data' => 'decryptedTestData',
+            'data' => 'mockDecryptedData',
             'verified' => true,
         ];
 
@@ -105,5 +106,29 @@ class CrittoraSDKTest extends TestCase
         $result = $this->sdk->decryptVerify($mockIdToken, $mockEncryptedData, $mockPermissions);
 
         $this->assertEquals($mockDecryptionResult, $result);
+    }
+
+    public function testAuthenticationFailure(): void
+    {
+        $this->mockAuthService->expects($this->once())
+            ->method('authenticate')
+            ->willThrowException(new \Exception('Authentication failed'));
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Authentication failed');
+
+        $this->sdk->authenticate('invalidUser', 'invalidPassword');
+    }
+
+    public function testEncryptionFailure(): void
+    {
+        $this->mockEncryptionService->expects($this->once())
+            ->method('encrypt')
+            ->willThrowException(new \Exception('Encryption failed'));
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Encryption failed');
+
+        $this->sdk->encrypt('mockIdToken', 'invalidData');
     }
 }

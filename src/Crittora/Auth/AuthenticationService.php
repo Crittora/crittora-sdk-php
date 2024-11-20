@@ -55,4 +55,31 @@ class AuthenticationService
             throw new Exception('Authentication failed: ' . $e->getMessage());
         }
     }
+
+    public static function getTestInstance($mockClient): self
+    {
+        $instance = new self();
+        $instance->client = $mockClient;
+        return $instance;
+    }
+
+    public function refreshTokens(string $refreshToken): array
+    {
+        try {
+            $result = $this->client->initiateAuth([
+                'AuthFlow' => 'REFRESH_TOKEN_AUTH',
+                'ClientId' => $this->config['clientId'],
+                'AuthParameters' => [
+                    'REFRESH_TOKEN' => $refreshToken,
+                ],
+            ]);
+
+            return [
+                'IdToken' => $result['AuthenticationResult']['IdToken'],
+                'AccessToken' => $result['AuthenticationResult']['AccessToken'],
+            ];
+        } catch (AwsException $e) {
+            throw new Exception('Token refresh failed: ' . $e->getMessage());
+        }
+    }
 }

@@ -57,6 +57,17 @@ try {
                     </div>
                 <?php endif; ?>
 
+                <?php if (isset($_SESSION['encrypt_status']) && $_SESSION['encrypt_status'] === 'success'): ?>
+                    <div class="alert success">
+                        Data encrypted successfully.
+                        <pre><?php echo htmlspecialchars($_SESSION['encrypted_data']); ?></pre>
+                    </div>
+                <?php elseif (isset($_SESSION['encrypt_status']) && $_SESSION['encrypt_status'] === 'error'): ?>
+                    <div class="alert error">
+                        Encryption failed: <?php echo htmlspecialchars($_SESSION['encrypt_error']); ?>
+                    </div>
+                <?php endif; ?>
+
                 <?php if (isset($_SESSION['decrypt_error'])): ?>
                     <div class="error">
                         <?php 
