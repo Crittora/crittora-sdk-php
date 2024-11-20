@@ -51,3 +51,6 @@ htmlcov/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# ConfigManager.bak.php
+src/Crittora/Config/ConfigManager.bak.php

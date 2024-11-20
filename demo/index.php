@@ -9,8 +9,8 @@
     <h1>Crittora SDK Demo</h1>
     <div>
         <h2>Authenticate</h2>
-        <input type="text" id="username" placeholder="Username" value="testuser5">
-        <input type="password" id="password" placeholder="Password" value="bObibRZt0*oyaU?p">
+        <input type="text" id="username" placeholder="Username" >
+        <input type="password" id="password" placeholder="Password" >
         <button onclick="authenticate()">Authenticate</button>
         <p id="tokenDisplay"></p>
     </div>
