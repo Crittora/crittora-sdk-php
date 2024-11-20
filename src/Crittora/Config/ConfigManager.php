@@ -9,9 +9,10 @@ class ConfigManager
 
     private function __construct()
     {
-        // Load environment variables from .env file if it exists
-        if (file_exists(__DIR__ . '/../../../.env')) {
-            $envFile = file_get_contents(__DIR__ . '/../../../.env');
+        // Manually load environment variables from .env file if it exists
+        $envPath = __DIR__ . '/../../../.env';
+        if (file_exists($envPath)) {
+            $envFile = file_get_contents($envPath);
             $lines = explode("\n", $envFile);
             foreach ($lines as $line) {
                 if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
@@ -21,6 +22,15 @@ class ConfigManager
                     putenv("$key=$value");
                 }
             }
+        }
+
+        // Debugging: Check if environment variables are loaded
+        if (!getenv('COGNITO_CLIENT_ID')) {
+            throw new \Exception('Environment variable COGNITO_CLIENT_ID is not set.');
+        }
+
+        if (!getenv('AWS_ACCESS_KEY_ID') || !getenv('AWS_SECRET_ACCESS_KEY')) {
+            throw new \Exception('Environment variables AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY are not set.');
         }
 
         $this->config = [

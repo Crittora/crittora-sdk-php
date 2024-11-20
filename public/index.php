@@ -34,9 +34,10 @@ try {
             <div style="margin: 1em">
                 <h1>Crittora Encryption Service</h1>
 
-                <!-- Alert Messages -->
+                <div class="auth-container">
+                    <!-- Alert Messages -->
                 <?php if (isset($_SESSION['auth_status'])): ?>
-                    <div class="<?php echo $_SESSION['auth_status'] === 'success' ? 'success' : 'error'; ?>">
+                    <div class="alert <?php echo $_SESSION['auth_status'] === 'success' ? 'success' : 'error'; ?>">
                         <?php 
                             echo htmlspecialchars($_SESSION['auth_message']); 
                             // Clear the message after displaying
@@ -48,7 +49,7 @@ try {
 
                 <!-- Add alerts for encryption/decryption operations -->
                 <?php if (isset($_SESSION['encrypt_error'])): ?>
-                    <div class="error">
+                    <div class="alert error">
                         <?php 
                             echo htmlspecialchars($_SESSION['encrypt_error']); 
                             unset($_SESSION['encrypt_error']);
@@ -66,21 +67,24 @@ try {
                 <?php endif; ?>
 
                 <!-- Authentication Form -->
-                <?php if (!isset($_SESSION['auth_token'])): ?>
-                    <form class="pure-form pure-form-stacked" action="/auth.php" method="POST">
-                        <fieldset>
-                            <legend>Authentication</legend>
-                            
-                            <label for="username">Username</label>
-                            <input type="text" id="username" name="username" required>
-                            
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" required>
-                            
-                            <button type="submit" class="pure-button pure-button-primary">Login</button>
-                        </fieldset>
-                    </form>
-                <?php endif; ?>
+                <form class="pure-form" action="/auth.php" method="POST">
+                    <fieldset>
+
+                        <?php if (isset($_SESSION['auth_status'])): ?>
+                            <div class="alert <?php echo $_SESSION['auth_status'] === 'success' ? 'success' : 'error'; ?>">
+                                <?php 
+                                    echo htmlspecialchars($_SESSION['auth_message']); 
+                                    // Clear the message after displaying
+                                    unset($_SESSION['auth_status']);
+                                    unset($_SESSION['auth_message']);
+                                ?>
+                            </div>
+                        <?php endif; ?>
+                        <button type="submit" class="pure-button pure-button-primary">Authenticate</button>
+                    </fieldset>
+                </form>
+</div>
+                
 
                 <!-- Encryption Form -->
                 <form method="POST" action="encrypt.php" id="encryptForm" class="pure-form pure-form-stacked" style="margin-bottom: 2em">

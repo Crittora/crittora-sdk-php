@@ -20,15 +20,6 @@ class HttpClient
         return self::$instance;
     }
 
-    /**
-     * Send a POST request to the specified URL
-     *
-     * @param string $url The target URL
-     * @param array $headers Request headers
-     * @param mixed $payload Request body
-     * @return array Decoded response
-     * @throws CrittoraException
-     */
     public function post(string $url, array $headers, $payload): array
     {
         try {
@@ -41,15 +32,19 @@ class HttpClient
                 ]
             ]);
 
-            $response = file_get_contents($url, false, $context);
-            
+            $response = @file_get_contents($url, false, $context);
+
             if ($response === false) {
-                throw new CrittoraException('Request failed', 'REQUEST_ERROR');
+                $error = error_get_last();
+                throw new CrittoraException(
+                    'HTTP request failed: ' . ($error['message'] ?? 'Unknown error'),
+                    'REQUEST_ERROR'
+                );
             }
 
             $statusLine = $http_response_header[0];
             preg_match('{HTTP/\S*\s(\d{3})}', $statusLine, $match);
-            $statusCode = $match[1];
+            $statusCode = $match[1] ?? 0;
 
             if ($statusCode >= 400) {
                 throw new CrittoraException(
@@ -60,10 +55,6 @@ class HttpClient
             }
 
             $responseData = json_decode($response, true);
-            
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new CrittoraException('Invalid JSON response', 'INVALID_RESPONSE');
-            }
 
             if (isset($responseData['body'])) {
                 return json_decode($responseData['body'], true);
@@ -71,8 +62,10 @@ class HttpClient
 
             throw new CrittoraException('Invalid response format', 'INVALID_RESPONSE');
         } catch (CrittoraException $e) {
+            $this->logError($url, $headers, $payload, $e->getMessage());
             throw $e;
         } catch (\Exception $e) {
+            $this->logError($url, $headers, $payload, $e->getMessage());
             throw new CrittoraException(
                 "Request failed: {$e->getMessage()}",
                 'REQUEST_ERROR'
@@ -80,12 +73,6 @@ class HttpClient
         }
     }
 
-    /**
-     * Format headers array into string format for stream context
-     *
-     * @param array $headers
-     * @return string
-     */
     private function formatHeaders(array $headers): string
     {
         return implode("\r\n", array_map(
@@ -94,4 +81,13 @@ class HttpClient
             $headers
         ));
     }
-} 
+
+    private function logError(string $url, array $headers, $payload, string $errorMessage): void
+    {
+        error_log("HTTP POST Request Error:");
+        error_log("URL: {$url}");
+        error_log("Headers: " . json_encode($headers));
+        error_log("Payload: " . json_encode($payload));
+        error_log("Error: {$errorMessage}");
+    }
+}
