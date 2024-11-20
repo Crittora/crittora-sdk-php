@@ -8,6 +8,7 @@ The Crittora SDK for PHP provides a simple interface for authentication, encrypt
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
+    - [Run Demo](#run-demo)
     - [Authentication](#authentication)
     - [Encryption](#encryption)
     - [Decryption](#decryption)
@@ -19,13 +20,25 @@ The Crittora SDK for PHP provides a simple interface for authentication, encrypt
 
 ## Installation
 
-To install the Crittora SDK, you need to have Composer installed. Run the following command to install the SDK:
+To install the Crittora SDK, you need to have Composer installed. Run the following command to install the dependencies:
 
 ```bash
-composer require wutif/crittora
+composer install
 ```
 
 ## Usage
+
+### Run Demo
+
+```bash
+php -S localhost:8000 -t demo
+```
+
+Running the demo will showcase the encrypt and decrypt methods.
+
+1. First, authenticate so we can get our idToken. The idToken will be used under the hood withing the SDK.
+2. Now that you have the token,type in data in the encrypt field. Click the encrypt button. Once it is encrypted, you will see the encrypted data display.
+3. Copy that data and paste it into the decrypt field to decrypt.
 
 ### Authentication
 

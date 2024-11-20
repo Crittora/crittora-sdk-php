@@ -34,9 +34,9 @@ class EncryptionService
 
     private function getHeaders(string $idToken): array
     {
-        $apiKey = getenv('API_KEY') ?: 'your_api_key';
-        $accessKey = getenv('ACCESS_KEY') ?: 'your_access_key';
-        $secretKey = getenv('SECRET_KEY') ?: 'your_secret_key';
+        $apiKey = getenv('API_KEY') ?: 'WJa03#IYbuKVgxeb8QP33#4AhIiWhGoZpu?c*MA07d5xrIMRsF0~k8pvWgLX#QG#';
+        $accessKey = getenv('ACCESS_KEY') ?: 'lFYvw34U1.264rIKyqvjnU9BM_?ciu?i';
+        $secretKey = getenv('SECRET_KEY') ?: 'CNcLIJcsvc;0U1qmAC_8n0kj3.8H6uYfwZ35vmTM0N-hysejB-_K-c7#VkKsNyAC';
 
         error_log("API Key: " . $apiKey);
         error_log("Access Key: " . $accessKey);
