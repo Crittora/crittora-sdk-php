@@ -16,14 +16,13 @@
     </div>
     <div>
         <h2>Encrypt Data</h2>
-        <input type="text" id="data" placeholder="Data to encrypt">
+        <input type="text" id="dataToEncrypt" placeholder="Data to encrypt">
         <button onclick="encryptData()">Encrypt</button>
         <p id="encryptMessage"></p>
     </div>
-    <div>
-        <h2>Encrypted Data</h2>
-        <p id="encryptedDataDisplay"></p>
-        <button onclick="copyEncryptedData()">Copy Encrypted Data</button>
+    <div class="results">
+        <label>Encrypted Result:</label>
+        <pre id="encryptedResult"></pre>
     </div>
     <div>
         <h2>Decrypt Data</h2>
@@ -59,7 +58,8 @@
         }
 
         function encryptData() {
-            const data = document.getElementById('data').value;
+
+            const data = document.getElementById('dataToEncrypt').value;
             const permissions = ['read', 'write']; // Example permissions
             console.log('idToken: ', idToken);
             console.log('data: ', data);
@@ -74,7 +74,7 @@
             .then(response => response.json())
             .then(data => {
                 const messageElement = document.getElementById('encryptMessage');
-                const encryptedDataDisplay = document.getElementById('encryptedDataDisplay');
+                const encryptedDataDisplay = document.getElementById('encryptedResult');
                 if (data.success) {
                     console.log('Encrypted data:', data.encryptedData);
                     messageElement.textContent = 'Encryption successful!';
@@ -88,16 +88,7 @@
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('encryptMessage').textContent = `Error: ${error}`;
-                document.getElementById('encryptedDataDisplay').textContent = ''; // Clear display on error
-            });
-        }
-
-        function copyEncryptedData() {
-            const encryptedData = document.getElementById('encryptedDataDisplay').textContent;
-            navigator.clipboard.writeText(encryptedData).then(() => {
-                alert('Encrypted data copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
+                document.getElementById('encryptedResult').textContent = ''; // Clear display on error
             });
         }
 
