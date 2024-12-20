@@ -2,6 +2,8 @@
 
 namespace Crittora\Config;
 
+use Dotenv\Dotenv;
+
 class ConfigManager
 {
     private static $instance = null;
@@ -9,20 +11,7 @@ class ConfigManager
 
     private function __construct()
     {
-        // Manually load environment variables from .env file if it exists
-        $envPath = __DIR__ . '/../../../.env';
-        if (file_exists($envPath)) {
-            $envFile = file_get_contents($envPath);
-            $lines = explode("\n", $envFile);
-            foreach ($lines as $line) {
-                if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
-                    list($key, $value) = explode('=', $line, 2);
-                    $key = trim($key);
-                    $value = trim($value);
-                    putenv("$key=$value");
-                }
-            }
-        }
+        $this->loadEnv();
 
         // Debugging: Check if environment variables are loaded
         if (!getenv('COGNITO_CLIENT_ID')) {
@@ -32,7 +21,30 @@ class ConfigManager
         if (!getenv('AWS_ACCESS_KEY_ID') || !getenv('AWS_SECRET_ACCESS_KEY')) {
             throw new \Exception('Environment variables AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY are not set.');
         }
+    }
 
+    private function loadEnv()
+    {
+        // Check if Dotenv class exists (it should be a dependency of the SDK)
+        if (class_exists('Dotenv\Dotenv')) {
+            // Try to locate the .env file
+            $paths = [
+                __DIR__ . '/../../../../.env', // From SDK to project root
+                __DIR__ . '/../../../.env',    // From SDK to vendor parent
+                __DIR__ . '/../../.env',       // From SDK to vendor
+                __DIR__ . '/../.env',          // From SDK root
+            ];
+
+            foreach ($paths as $path) {
+                if (file_exists($path)) {
+                    $dotenv = Dotenv::createImmutable(dirname($path));
+                    $dotenv->load();
+                    break;
+                }
+            }
+        }
+
+        // Load configuration from environment variables
         $this->config = [
             'cognitoEndpoint' => getenv('COGNITO_ENDPOINT') ?: 'https://cognito-idp.us-east-1.amazonaws.com/',
             'baseUrl' => getenv('CRITTORA_BASE_URL') ?: 'https://api.crittoraapis.com',
