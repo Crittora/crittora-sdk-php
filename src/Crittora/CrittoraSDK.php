@@ -4,7 +4,7 @@ namespace Crittora;
 
 use Crittora\Auth\AuthenticationService;
 use Crittora\Services\EncryptionService;
-use Crittora\Config\ConfigManager;
+use Crittora\Config\ConfigManager; # check for env file
 use Crittora\Exception\CrittoraException;
 
 class CrittoraSDK
