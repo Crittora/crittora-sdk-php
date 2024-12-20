@@ -2,6 +2,7 @@
   "name": "wutif/crittora-sdk-php",
   "description": "Crittora SDK for PHP",
   "type": "library",
+  "version": "1.0.0",
   "require": {
     "php": ">=7.4",
     "aws/aws-sdk-php": "^3.0",
