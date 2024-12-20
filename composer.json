@@ -17,5 +17,7 @@
     "psr-4": {
       "Crittora\\": "src/Crittora/"
     }
-  }
+  },
+  "minimum-stability": "alpha",
+  "prefer-stable": true
 }
