@@ -14,12 +14,12 @@ class ConfigManager
         $this->loadEnv();
 
         // Debugging: Check if environment variables are loaded
-        if (!getenv('COGNITO_CLIENT_ID')) {
-            throw new \Exception('Environment variable COGNITO_CLIENT_ID is not set.');
+        if (!getenv('CRITTORA_CLIENT_ID')) {
+            throw new \Exception('Environment variable CRITTORA_CLIENT_ID is not set.');
         }
 
-        if (!getenv('AWS_ACCESS_KEY_ID') || !getenv('AWS_SECRET_ACCESS_KEY')) {
-            throw new \Exception('Environment variables AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY are not set.');
+        if (!getenv('CRITTORA_ACCESS_KEY') || !getenv('CRITTORA_SECRET_KEY')) {
+            throw new \Exception('Environment variables CRITTORA_ACCESS_KEY or CRITTORA_SECRET_KEY are not set.');
         }
     }
 
@@ -49,10 +49,10 @@ class ConfigManager
             'cognitoEndpoint' => getenv('COGNITO_ENDPOINT') ?: 'https://cognito-idp.us-east-1.amazonaws.com/',
             'baseUrl' => getenv('CRITTORA_BASE_URL') ?: 'https://api.crittoraapis.com',
             'userPoolId' => getenv('COGNITO_USER_POOL_ID') ?: 'us-east-1_Tmljk4Uiw',
-            'clientId' => getenv('COGNITO_CLIENT_ID') ?: '5cvaao4qgphfp38g433vi5e82u',
+            'clientId' => getenv('CRITTORA_CLIENT_ID') ?: '5cvaao4qgphfp38g433vi5e82u',
             'region' => getenv('AWS_REGION') ?: 'us-east-1',
-            'accessKeyId' => getenv('AWS_ACCESS_KEY_ID'),
-            'secretAccessKey' => getenv('AWS_SECRET_ACCESS_KEY'),
+            'accessKeyId' => getenv('CRITTORA_ACCESS'),
+            'secretAccessKey' => getenv('CRITTORA_SECRET_KEY'),
         ];
     }
 
