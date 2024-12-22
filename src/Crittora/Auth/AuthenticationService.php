@@ -18,11 +18,7 @@ class AuthenticationService
         $this->config = ConfigManager::getInstance()->getConfig();
         $this->client = new CognitoIdentityProviderClient([
             'version' => 'latest',
-            'region'  => $this->config['region'],
-            'credentials' => [
-                'key'    => $this->config['accessKeyId'],
-                'secret' => $this->config['secretAccessKey'],
-            ],
+            'region'  => $this->config['region']
         ]);
     }
 
