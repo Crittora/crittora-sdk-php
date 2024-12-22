@@ -34,13 +34,13 @@ class EncryptionService
 
     private function getHeaders(string $idToken): array
     {
-        $apiKey = getenv('API_KEY');    
-        $accessKey = getenv('ACCESS_KEY');
-        $secretKey = getenv('SECRET_KEY');
+        $apiKey = getenv('CRITTORA_API_KEY');    
+        $accessKey = getenv('CRITTORA_ACCESS_KEY');
+        $secretKey = getenv('CRITTORA_SECRET_KEY');
 
-        error_log("API Key: " . $apiKey);
-        error_log("Access Key: " . $accessKey);
-        error_log("Secret Key: " . $secretKey);
+        error_log("Crittora API Key: " . $apiKey);
+        error_log("Crittora Access Key: " . $accessKey);
+        error_log("Crittora Secret Key: " . $secretKey);
 
         return [
             'Authorization' => "Bearer {$idToken}",
