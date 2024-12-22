@@ -13,9 +13,15 @@ class CrittoraSDK
     private $encryptionService;
     private $config;
 
-    public function __construct()
+    public function __construct($accessKey = null, $secretKey = null)
     {
         $this->config = ConfigManager::getInstance()->getConfig();
+
+        if ($accessKey !== null && $secretKey !== null) {
+            $this->config['accessKeyId'] = $accessKey;
+            $this->config['secretAccessKey'] = $secretKey;
+        }
+
         $this->validateConfig();
 
         $this->authService = AuthenticationService::getInstance();
@@ -27,7 +33,7 @@ class CrittoraSDK
         $requiredKeys = ['clientId', 'userPoolId', 'region', 'accessKeyId', 'secretAccessKey'];
         foreach ($requiredKeys as $key) {
             if (empty($this->config[$key])) {
-                throw new CrittoraException("Missing required configuration: $key");
+                throw new CrittoraException("Missing required configuration: $key", 'CONFIG_ERROR');
             }
         }
     }
