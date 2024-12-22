@@ -17,7 +17,7 @@ class ConfigManager
             'cognitoEndpoint' => getenv('COGNITO_ENDPOINT') ?: 'https://cognito-idp.us-east-1.amazonaws.com/',
             'baseUrl' => getenv('CRITTORA_BASE_URL') ?: 'https://api.crittoraapis.com',
             'userPoolId' => getenv('COGNITO_USER_POOL_ID'),
-            'clientId' => getenv('COGNITO_CLIENT_ID'),
+            'clientId' => getenv('CRITTORA_CLIENT_ID'),
             'region' => getenv('AWS_REGION') ?: 'us-east-1',
             'accessKeyId' => getenv('CRITTORA_ACCESS_KEY'),
             'secretAccessKey' => getenv('CRITTORA_SECRET_KEY'),
