@@ -8,12 +8,13 @@ The Crittora SDK for PHP provides a simple interface for authentication, encrypt
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
-    - [Run Demo](#run-demo)
+    - [Demo Application](#demo-application)
+      - [Features](#features)
+        - [Requirements](#requirements)
     - [Authentication](#authentication)
     - [Encryption](#encryption)
     - [Decryption](#decryption)
-  - [Demo Application](#demo-application)
-    - [Running the Demo](#running-the-demo)
+  - [Demo Application](#demo-application-1)
   - [Testing](#testing)
   - [Contributing](#contributing)
   - [License](#license)
@@ -28,17 +29,23 @@ composer install
 
 ## Usage
 
-### Run Demo
+### Demo Application
 
-```bash
-php -S localhost:8000 -t demo
-```
+https://github.com/Crittora/crittora-demo-php
 
-Running the demo will showcase the encrypt and decrypt methods.
+This project is a demonstration of how to use the Crittora SDK for PHP. It provides a simple web interface for authentication, data encryption, and decryption using the Crittora SDK.
 
-1. First, authenticate so we can get our idToken. The idToken will be used under the hood withing the SDK.
-2. Now that you have the token,type in data in the encrypt field. Click the encrypt button. Once it is encrypted, you will see the encrypted data display.
-3. Copy that data and paste it into the decrypt field to decrypt.
+#### Features
+
+- User authentication using environment variables.
+- Data encryption and decryption.
+- User-friendly web interface built with Bootstrap.
+
+##### Requirements
+
+- PHP 7.2 or higher
+- Composer
+- Access to the Crittora SDK
 
 ### Authentication
 
@@ -70,24 +77,6 @@ $decryptedData = $sdk->decrypt($idToken, $encryptedData, ['read']);
 ## Demo Application
 
 The demo application provides a simple interface to test the authentication, encryption, and decryption functionalities of the SDK.
-
-### Running the Demo
-
-1. **Setup Environment Variables**: Ensure you have a `.env` file in the root directory with the necessary environment variables. Refer to the `ConfigManager` class for required variables.
-
-2. **Start a Local Server**: Navigate to the `demo` directory and start a PHP server:
-
-   ```bash
-   php -S localhost:8000
-   ```
-
-3. **Access the Demo**: Open your browser and go to `http://localhost:8000/demo/index.php` to access the demo interface.
-
-4. **Authenticate**: Enter the username and password, then click "Authenticate" to obtain an ID token.
-
-5. **Encrypt Data**: Enter the data you wish to encrypt and click "Encrypt".
-
-6. **Decrypt Data**: Enter the encrypted data and click "Decrypt" to retrieve the original data.
 
 ## Testing
 
