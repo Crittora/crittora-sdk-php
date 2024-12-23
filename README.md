@@ -7,14 +7,14 @@ The Crittora SDK for PHP provides a simple interface for authentication, encrypt
 - [Crittora SDK for PHP](#crittora-sdk-for-php)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+  - [Demo Application](#demo-application)
+    - [Features](#features)
+      - [Requirements](#requirements)
   - [Usage](#usage)
-    - [Demo Application](#demo-application)
-      - [Features](#features)
-        - [Requirements](#requirements)
+    - [Initialize SDK](#initialize-sdk)
     - [Authentication](#authentication)
     - [Encryption](#encryption)
     - [Decryption](#decryption)
-  - [Demo Application](#demo-application-1)
   - [Testing](#testing)
   - [Contributing](#contributing)
   - [License](#license)
@@ -24,16 +24,14 @@ The Crittora SDK for PHP provides a simple interface for authentication, encrypt
 To install the Crittora SDK, you need to have Composer installed. Run the following command to install the dependencies:
 
 ```bash
-composer install
+composer require wutif/crittora-sdk-php
 ```
 
-## Usage
+## Demo Application
 
-### Demo Application
+The simplest way to get started with Crittora is to view a demo. The demo application provides a simple interface to test the authentication, encryption, and decryption functionalities of the SDK.
 
 https://github.com/Crittora/crittora-demo-php
-
-This project is a demonstration of how to use the Crittora SDK for PHP. It provides a simple web interface for authentication, data encryption, and decryption using the Crittora SDK.
 
 #### Features
 
@@ -47,14 +45,36 @@ This project is a demonstration of how to use the Crittora SDK for PHP. It provi
 - Composer
 - Access to the Crittora SDK
 
+## Usage
+
+### Initialize SDK
+
+Initialize the SDK by passing in your accessKey and secretKey. This will return the `IdToken` which you will need to use when calling the encrypt and decrypt methods
+
+```php
+use Crittora\CrittoraSDK;
+
+$sdk = new CrittoraSDK($accessKey, $secretKey);
+```
+
+**_Example_**
+
+```php
+try {
+    $sdk = new CrittoraSDK($accessKey, $secretKey);
+    $authResponse = $sdk->authenticate($username, $password);
+    echo json_encode(['success' => true, 'IdToken' => $authResponse['IdToken']]);
+} catch (Exception $e) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+}
+```
+
 ### Authentication
 
 To authenticate a user, use the `authenticate` method of the `CrittoraSDK` class. This method requires a username and password and returns an array containing tokens.
 
 ```php
-use Crittora\CrittoraSDK;
-
-$sdk = new CrittoraSDK();
 $authResponse = $sdk->authenticate('username', 'password');
 ```
 
@@ -73,10 +93,6 @@ To decrypt data, use the `decrypt` method. This method requires an ID token, the
 ```php
 $decryptedData = $sdk->decrypt($idToken, $encryptedData, ['read']);
 ```
-
-## Demo Application
-
-The demo application provides a simple interface to test the authentication, encryption, and decryption functionalities of the SDK.
 
 ## Testing
 
