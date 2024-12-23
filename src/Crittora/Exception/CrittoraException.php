@@ -4,9 +4,16 @@ namespace Crittora\Exception;
 
 class CrittoraException extends \Exception
 {
-    public function __construct(string $message, string $code = '', int $status = 0)
+    private $errorCode;
+
+    public function __construct(string $message, string $errorCode, int $status = 0)
     {
         parent::__construct($message, $status);
-        $this->code = $code;
+        $this->errorCode = $errorCode;
+    }
+
+    public function getErrorCode(): string
+    {
+        return $this->errorCode;
     }
 }
